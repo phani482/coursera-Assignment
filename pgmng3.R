@@ -23,6 +23,10 @@ makeCacheMatrix <- function(x=matrix()){
   list(set=set, get=get, setinverse=setinverse, getinverse=getinverse)
 }
 
+##This function computes the inverse of the special "matrix" returned by makeCacheMatrix above. 
+##If the inverse has already been calculated (and the matrix has not changed), then the cachesolve 
+##should retrieve the inverse from the cache.
+
 cacheinverse<- function(x, ...) {
   inv<- x$getinverse()
   ## if the inverse has already been calculated
@@ -41,22 +45,22 @@ cacheinverse<- function(x, ...) {
 
 ## Inverse testing
 
-test <- function(mat){
-  temp = makeCacheMatrix(mat)
+##test <- function(mat){
+##  temp = makeCacheMatrix(mat)
+##  
+##  start.time = Sys.time()
+##  cacheinverse(temp)
+##  diff = Sys.time() - start.time
+##  print(diff)
   
-  start.time = Sys.time()
-  cacheinverse(temp)
-  dur = Sys.time() - start.time
-  print(dur)
-  
-  start.time = Sys.time()
-  cacheinverse(temp)
-  dur = Sys.time() - start.time
-  print(dur)
-}
+##  start.time = Sys.time()
+##  cacheinverse(temp)
+##  diff = Sys.time() - start.time
+##  print(diff)
+##}
 ## calling functions
-set.seed(1110201)
-r = rnorm(1000000)
-mat1 = matrix(r, nrow=1000, ncol=1000)
-test(mat1)
+##set.seed(110202)
+##r = rnorm(10000)
+##mat1 = matrix(r, nrow=100, ncol=100)
+##test(mat1)
 
