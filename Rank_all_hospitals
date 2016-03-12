@@ -1,0 +1,45 @@
+  rankall <- function(outcome, num ){
+    ## Read outcome data
+  file <- read.csv("outcome-of-care-measures.csv")
+    
+    ## Check that state and outcome are valid
+  states<- levels(file$State)
+  outcomes<-	 c('heart attack', 'heart failure', 'pneumonia')
+  
+  #search1<-grep(state,states,ignore.case=TRUE,value=TRUE)
+  #if (search1!=state){stop("invalid state")}
+  
+  search2<-grep(outcome,outcomes,ignore.case=TRUE,value=TRUE)
+  if(search2!=outcome){stop("invalid outcome")}
+  
+    ## For each state, find the hospital of the given rank
+  
+  col <-  if (outcome == "heart attack") {  11}
+      else if (outcome == "heart failure") {  17}
+      else {  23}
+  
+  file[,col]<-suppressWarnings(as.numeric(levels(file[, col])[file[, col]]))
+  file[,2]<-as.character(file[,2])
+  out<-vector()
+  for (i in 1:length(states)){
+        statedata<-file[which(file$State==(grep(states[i],file$State,ignore.case=TRUE,value=TRUE))),]
+        orderdata <-statedata[order(statedata[,col],statedata[,2], na.last=TRUE), ]
+        
+        hospital <- if(num == "best") {
+              orderdata[1, 2]
+            } else if(num == "worst") {
+              orderdata[nrow(orderdata), 2]
+            } else{
+              orderdata[num, 2]
+            }
+  out<- append(out,c(hospital,states[i]))
+  }
+  
+    ## Return a data frame with the hospital names and the
+    ## (abbreviated) state name
+ out<- as.data.frame(matrix(out,length(states),2, byrow=TRUE))
+  #out<-data.frame(hospital=hospital, state=states)
+ colnames(out)<- c("hospital", "state")
+ rownames(out) <- states
+ return(out)
+  }
